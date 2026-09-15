@@ -1,0 +1,6 @@
+[submodule "web"]
+	path = web
+	url = https://github.com/Szpontniki/web
+[submodule "firmware"]
+	path = firmware
+	url = https://github.com/Szpontniki/firmware
