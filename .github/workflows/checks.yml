@@ -1,0 +1,20 @@
+name: "Checks"
+on:
+  push:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  validate-check:
+    name: 🗿 Validate Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Init the Submodules
+        run: git submodule update --init --recursive
+
+      - name: Run validation
+        run: ./validate.sh
