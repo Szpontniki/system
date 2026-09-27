@@ -4,3 +4,6 @@
 [submodule "firmware"]
 	path = firmware
 	url = https://github.com/Szpontniki/firmware
+[submodule "auxiliary-api"]
+	path = auxiliary-api
+	url = https://github.com/Szpontniki/auxiliary-api
