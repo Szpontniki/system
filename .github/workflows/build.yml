@@ -23,6 +23,30 @@ jobs:
 
       - uses: ./firmware/.github/actions/checks
 
+  web-checks:
+    name: Checks / web
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ./web/.github/actions/checks
+
+  auxiliary-api-checks:
+    name: Checks / auxiliary-api
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ./auxiliary-api/.github/actions/checks
+
   firmware-containerize:
     needs:
       - checks
@@ -34,3 +58,27 @@ jobs:
       name: firmware
       tags: ghcr.io/szpontniki/firmware:system-latest
       context: ./firmware
+
+  web-containerize:
+    needs:
+      - checks
+      - web-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      name: web
+      tags: ghcr.io/szpontniki/web:system-latest
+      context: ./web
+
+  auxiliary-api-containerize:
+    needs:
+      - checks
+      - auxiliary-api-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      name: auxiliary-api
+      tags: ghcr.io/szpontniki/auxiliary-api:system-latest
+      context: ./auxiliary-api
