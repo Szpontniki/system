@@ -6,7 +6,7 @@ on:
 
 jobs:
   validate-check:
-    name: 🗿 Validate Check
+    name: system
     runs-on: ubuntu-latest
 
     steps:
