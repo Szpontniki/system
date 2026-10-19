@@ -1,0 +1,34 @@
+name: "Build"
+on:
+  push:
+    branches:
+      - master
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: Checks
+    uses: ./.github/workflows/checks.yml
+
+  firmware-checks:
+    name: Checks - firmware
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ./firmware/.github/actions/checks
+
+  firmware-containerize:
+    needs:
+      - checks
+      - firmware-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      tags: ghcr.io/szpontniki/firmware:system-latest
+      context: ./firmware
