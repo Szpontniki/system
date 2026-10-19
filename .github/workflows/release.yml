@@ -1,0 +1,81 @@
+name: "Release"
+on:
+  release:
+    types: [published]
+
+jobs:
+  checks:
+    name: Checks
+    uses: ./.github/workflows/checks.yml
+
+  firmware-checks:
+    name: Checks / firmware
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ./firmware/.github/actions/checks
+
+  web-checks:
+    name: Checks / web
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ./web/.github/actions/checks
+
+  auxiliary-api-checks:
+    name: Checks / auxiliary-api
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: ./auxiliary-api/.github/actions/checks
+
+  firmware-containerize:
+    needs:
+      - checks
+      - firmware-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      name: firmware
+      tags: ghcr.io/szpontniki/firmware:system-${{ github.event.release.tag_name }}
+      context: ./firmware
+
+  web-containerize:
+    needs:
+      - checks
+      - web-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      name: web
+      tags: ghcr.io/szpontniki/web:system-${{ github.event.release.tag_name }}
+      context: ./web
+
+  auxiliary-api-containerize:
+    needs:
+      - checks
+      - auxiliary-api-checks
+
+    name: Containerize
+    uses: ./.github/workflows/containerize.yml
+    with:
+      name: auxiliary-api
+      tags: ghcr.io/szpontniki/auxiliary-api:system-${{ github.event.release.tag_name }}
+      context: ./auxiliary-api
