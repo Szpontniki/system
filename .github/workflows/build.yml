@@ -31,5 +31,6 @@ jobs:
     name: Containerize
     uses: ./.github/workflows/containerize.yml
     with:
+      name: firmware
       tags: ghcr.io/szpontniki/firmware:system-latest
       context: ./firmware

@@ -3,6 +3,12 @@ name: "Containerize"
 on:
   workflow_call:
     inputs:
+      name:
+        description: "Display name for this workflow's job."
+        required: false
+        type: string
+        default: "Build Docker image(s)"
+
       tags:
         description: "Docker image tags."
         required: true
@@ -20,7 +26,7 @@ on:
 
 jobs:
   images:
-    name: ⚙️ Build Docker image(s)
+    name: ${{ inputs.name }}
     runs-on: ubuntu-latest
 
     steps:
